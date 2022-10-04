@@ -1,0 +1,6 @@
+{
+  "$schema": "tsschema://node_modules/@gasbuddy/service/src/config/schema.ts#ConfigurationSchema",
+  "routing": {
+    "openapi": false
+  }
+}
