@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import path from 'path';
 import readPackageUp from 'read-pkg-up';
 import { ServiceFactory, ServiceStartOptions, startApp } from '@gasbuddy/service';
@@ -43,4 +44,22 @@ export async function clearReusableApp() {
   }
   app = undefined;
   appService = undefined;
+}
+
+export async function getSimulatedContext(config?: Record<string, any>) {
+  return {
+    name: 'fake-serv',
+    config: {
+      get(key: string) {
+        return _.get(config || {}, key.split(':'));
+      },
+    },
+    logger: {
+      level: 'debug',
+      silent() {},
+      // eslint-disable-next-line no-console
+      fatal: (...args: any) => console.error(...args),
+      ...console,
+    },
+  };
 }
