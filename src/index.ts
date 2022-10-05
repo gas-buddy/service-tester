@@ -1,14 +1,26 @@
 import _ from 'lodash';
 import path from 'path';
 import readPackageUp from 'read-pkg-up';
-import { ServiceFactory, ServiceStartOptions, startApp } from '@gasbuddy/service';
+import {
+  RequestLocals,
+  ServiceFactory,
+  ServiceLocals,
+  ServiceStartOptions,
+  startApp,
+} from '@gasbuddy/service';
 
 import type { ServiceExpress } from '@gasbuddy/service';
 
 let app: ServiceExpress | undefined;
 let appService: ServiceFactory | undefined;
 
-export async function getReusableApp(options?: ServiceStartOptions | ServiceFactory, cwd?: string) {
+export async function getReusableApp<
+  SLocals extends ServiceLocals = ServiceLocals,
+  RLocals extends RequestLocals = RequestLocals,
+>(
+  options?: ServiceStartOptions<SLocals, RLocals> | ServiceFactory<SLocals, RLocals>,
+  cwd?: string,
+) {
   if (!options) {
     if (!app) {
       throw new Error('getReusableApp() called with no options, requires existing app');

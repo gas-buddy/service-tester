@@ -14,6 +14,7 @@
 *.pid
 *.gz
 *.orig
+*.eslintcache
 
 work
 /build
