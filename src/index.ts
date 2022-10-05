@@ -21,6 +21,11 @@ export async function getReusableApp<
   options?: ServiceStartOptions<SLocals, RLocals> | ServiceFactory<SLocals, RLocals>,
   cwd?: string,
 ): Promise<ServiceExpress<SLocals>> {
+  const logFn = (error: Error) => {
+    // eslint-disable-next-line no-console
+    console.error('Could not start app', error);
+    throw error;
+  };
   let typedApp = app as ServiceExpress<SLocals>;
   if (!options) {
     if (!app) {
@@ -41,10 +46,10 @@ export async function getReusableApp<
         name: pkg.packageJson.name.split('/')[1],
         rootDirectory: path.dirname(pkg.path),
         codepath: 'src',
-      });
+      }).catch(logFn);
       appService = options;
     } else {
-      typedApp = await startApp({ codepath: 'src', ...options });
+      typedApp = await startApp({ codepath: 'src', ...options }).catch(logFn);
       appService = options.service;
     }
     app = typedApp;
