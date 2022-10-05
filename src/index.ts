@@ -20,12 +20,13 @@ export async function getReusableApp<
 >(
   options?: ServiceStartOptions<SLocals, RLocals> | ServiceFactory<SLocals, RLocals>,
   cwd?: string,
-) {
+): Promise<ServiceExpress<SLocals>> {
+  let typedApp = app as ServiceExpress<SLocals>;
   if (!options) {
     if (!app) {
       throw new Error('getReusableApp() called with no options, requires existing app');
     }
-    return app;
+    return typedApp;
   }
   const factory = typeof options === 'function' ? options : options.service;
   if (!app || appService !== factory) {
@@ -35,7 +36,7 @@ export async function getReusableApp<
       if (!pkg) {
         throw new Error('Could not find relevant package.json for the service');
       }
-      app = await startApp({
+      typedApp = await startApp({
         service: options,
         name: pkg.packageJson.name.split('/')[1],
         rootDirectory: path.dirname(pkg.path),
@@ -43,11 +44,13 @@ export async function getReusableApp<
       });
       appService = options;
     } else {
-      app = await startApp({ codepath: 'src', ...options });
+      typedApp = await startApp({ codepath: 'src', ...options });
       appService = options.service;
     }
+    app = typedApp;
+    return typedApp;
   }
-  return app;
+  return typedApp;
 }
 
 export async function clearReusableApp() {
