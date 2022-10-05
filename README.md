@@ -3,7 +3,7 @@ service-tester
 
 ![main CI](https://github.com/gas-buddy/service-tester/actions/workflows/nodejs.yml/badge.svg)
 
-[![npm version](https://badge.fury.io/js/@gasbuddy%service-tester.svg)](https://badge.fury.io/js/@gasbuddy%2Fservice-tester)
+[![npm version](https://badge.fury.io/js/@gasbuddy%2Fservice-tester.svg)](https://badge.fury.io/js/@gasbuddy%2Fservice-tester)
 
 This module makes it easier for you to write tests for your node.js GasBuddy microservice. Simply add
 the module as a dev dependency:
