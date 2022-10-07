@@ -12,7 +12,7 @@ function getFakeServiceFn(flags: {
     start(app) {
       app.locals.services = {
         fakeServ: {
-          get_something() {
+          async get_something() {
             throw new Error('Should not be called.');
           },
         },
@@ -56,6 +56,9 @@ describe('Start and stop shared app', () => {
     await request(app).get('/foobar').expect(404);
     await request(app).post('/').expect(500);
     mockServiceCall(app.locals.services.fakeServ, 'get_something').mockResolvedValue({
+      responseType: 'response',
+      headers: new Headers(),
+      status: 200,
       body: { things: ['a', 'b', 'c'] },
     });
     const { body } = await request(app).post('/').expect(200);
