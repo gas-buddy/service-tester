@@ -28,3 +28,19 @@ describe('my service', () => {
 });
 ```
 
+Service call mocking
+--
+
+Nock is so 2010. The future is mock! Since we have typed clients for services these days, mocking them is easier. We've played some nutty
+tricks with Typescript (well, nutty for me), to enable this kind of syntax:
+
+```
+  mockServiceCall(app.locals.services.myCrazyServ, 'get_some_resource').mockResolvedValue({
+    status: 200,
+    responseType: 'response',
+    body: { resource: true },
+  });
+```
+
+This will cause calls to `app.locals.services.myCrazyServ.get_some_resource()` to return `{resource: true}`. This is just shorthand
+for `jest.spyOn(service, 'method')` with knowledge of the traditional return type of OpenAPI service calls.
