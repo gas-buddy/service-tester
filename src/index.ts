@@ -83,3 +83,31 @@ export async function getSimulatedContext(config?: Record<string, any>) {
     },
   };
 }
+
+export function mockServiceCall<
+  Service extends {},
+  M extends keyof jest.FunctionProperties<Required<Service>>,
+>(service: Service, method: M) {
+  const spy = jest.spyOn(service, method);
+  return {
+    mockResolvedValue: (sim: Parameters<typeof spy['mockResolvedValue']>[0]) => spy.mockResolvedValue({
+      status: 200,
+      headers: new Headers(sim.headers || {}),
+      ...sim,
+    }),
+    mockResolvedValueOnce: (sim: Parameters<typeof spy['mockResolvedValueOnce']>[0]) => spy.mockResolvedValueOnce({
+      status: 200,
+      headers: new Headers(sim.headers || {}),
+      ...sim,
+    }),
+    mockRejectedValue: (sim: Parameters<typeof spy['mockRejectedValue']>[0]) => spy.mockResolvedValueOnce({
+      headers: new Headers(sim.headers || {}),
+      ...sim,
+    }),
+    mockRejectedValueOnce: (sim: Parameters<typeof spy['mockRejectedValueOnce']>[0]) => spy.mockResolvedValueOnce({
+      headers: new Headers(sim.headers || {}),
+      ...sim,
+    }),
+    spy,
+  };
+}
