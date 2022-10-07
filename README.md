@@ -39,6 +39,7 @@ tricks with Typescript (well, nutty for me), to enable this kind of syntax:
     status: 200,
     responseType: 'response',
     body: { resource: true },
+    headers: new Headers(),
   });
 ```
 

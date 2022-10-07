@@ -1,11 +1,22 @@
 import request from 'supertest';
-import { getReusableApp, clearReusableApp } from '../src';
-
 import type { Service, ServiceStartOptions } from '@gasbuddy/service';
+import { getReusableApp, clearReusableApp, mockServiceCall } from '../src';
 
-function getFakeServiceFn(flags: { started: number; stopped: number }): () => Service {
+import { FakeServLocals } from './src/types';
+
+function getFakeServiceFn(flags: {
+  started: number;
+  stopped: number;
+}): () => Service<FakeServLocals> {
   return () => ({
     start(app) {
+      app.locals.services = {
+        fakeServ: {
+          get_something() {
+            throw new Error('Should not be called.');
+          },
+        },
+      };
       flags.started += 1;
     },
     async stop() {
@@ -40,9 +51,16 @@ describe('Start and stop shared app', () => {
   });
 
   test('Should make requests', async () => {
-    const app = await getReusableApp();
+    const app = await getReusableApp<FakeServLocals>();
     await request(app).get('/').expect(200);
     await request(app).get('/foobar').expect(404);
+    await request(app).post('/').expect(500);
+    mockServiceCall(app.locals.services.fakeServ, 'get_something').mockResolvedValue({
+      body: { things: ['a', 'b', 'c'] },
+    });
+    const { body } = await request(app).post('/').expect(200);
+    expect(body.things).toBeTruthy();
+    expect(body.things.length).toEqual(3);
   });
 
   test('Should shut down app', async () => {

@@ -1,3 +1,4 @@
 build/
 coverage
-parser.js
+jest.config.js
+.eslintrc.js

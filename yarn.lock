@@ -462,6 +462,7 @@ __metadata:
     lodash: ^4.17.21
     pino-pretty: ^9.1.1
     read-pkg-up: ^7.0.1
+    rest-api-support: ^1.14.0
     supertest: ^6.3.0
     ts-jest: ^29.0.3
     typescript: ^4.8.4
@@ -6452,6 +6453,15 @@ express@next:
   dependencies:
     query-string: ^6.14.1
   checksum: fd8589a98f27830994964a840d38b322f757c76191d666342fb8c7576b4c89b91931137373e30729363674af424f96025f7ed096dee107c6592ac752e25c903b
+  languageName: node
+  linkType: hard
+
+"rest-api-support@npm:^1.14.0":
+  version: 1.14.0
+  resolution: "rest-api-support@npm:1.14.0"
+  dependencies:
+    query-string: ^6.14.1
+  checksum: 0250b8410bcef434dd4c4d1aac65a7d60ddfe01ca8526e229eee6ec03e0f2bca13be3825c93cca61228c76204008633bee4421524fa901dea43ab6cc4b26050c
   languageName: node
   linkType: hard
 

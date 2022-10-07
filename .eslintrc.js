@@ -1,10 +1,7 @@
 module.exports = {
   root: true,
-  extends: [
-    'airbnb-base',
-    'airbnb-typescript/base',
-  ],
+  extends: 'gasbuddy',
   parserOptions: {
-    project: './tsconfig.json'
+    project: './tsconfig.json',
   },
 };
