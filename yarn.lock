@@ -448,7 +448,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gasbuddy/service-tester@workspace:."
   dependencies:
-    "@gasbuddy/service": ^11.7.0
+    "@gasbuddy/service": ^11.9.0
     "@types/jest": ^29.1.2
     "@types/lodash": ^4.14.186
     "@types/supertest": ^2.0.12
@@ -473,12 +473,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gasbuddy/service@npm:^11.7.0":
-  version: 11.7.0
-  resolution: "@gasbuddy/service@npm:11.7.0"
+"@gasbuddy/service@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "@gasbuddy/service@npm:11.9.0"
   dependencies:
     "@godaddy/terminus": ^4.11.2
     "@opentelemetry/api": ^1.2.0
+    "@opentelemetry/api-metrics": ^0.33.0
+    "@opentelemetry/exporter-prometheus": ^0.33.0
     "@opentelemetry/exporter-trace-otlp-proto": ^0.33.0
     "@opentelemetry/instrumentation-aws-sdk": ^0.9.2
     "@opentelemetry/instrumentation-dns": ^0.30.0
@@ -493,6 +495,7 @@ __metadata:
     "@opentelemetry/instrumentation-pino": ^0.32.0
     "@opentelemetry/instrumentation-redis": ^0.33.0
     "@opentelemetry/instrumentation-redis-4": ^0.33.0
+    "@opentelemetry/sdk-metrics": ^0.33.0
     "@opentelemetry/sdk-node": ^0.33.0
     abort-controller: ^3.0.0
     confit: ^3.0.0
@@ -505,13 +508,13 @@ __metadata:
     minimist: ^1.2.6
     pino: ^8.6.1
     read-pkg-up: ^7.0.1
-    rest-api-support: ^1.13.3
+    rest-api-support: ^1.14.0
     shortstop-dns: ^1.1.0
     shortstop-handlers: ^1.1.1
     shortstop-yaml: ^1.0.0
   bin:
     start-service: build/bin/start-service.js
-  checksum: c33fd5a2a6171212a8c63db3d4d6956036aaf0ca7930a9f85fe531dca97b301fd196a052d0b4f16260188f3c0db052bb02bec7438617e9716a38013918320e52
+  checksum: 2715af76e40132c0213ff52e2a75d4b12e5b02fd1d4024a9f70b744036c4132dc875d855394961b4103d22ea4364752fee675e0551e1210c22665c7f1c6fe658
   languageName: node
   linkType: hard
 
@@ -937,7 +940,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api-metrics@npm:0.33.0":
+"@opentelemetry/api-metrics@npm:0.33.0, @opentelemetry/api-metrics@npm:^0.33.0":
   version: 0.33.0
   resolution: "@opentelemetry/api-metrics@npm:0.33.0"
   dependencies:
@@ -970,6 +973,19 @@ __metadata:
   peerDependencies:
     "@opentelemetry/api": ">=1.0.0 <1.3.0"
   checksum: 94fcae57c3c2c3a1cff6311246f32a228b216533449bfcec2f8eb03ea023f0ace4e0929c8cf5145772c6f25263d5f2d5d3485a39ab0ced4e11f5a0fed7497e9c
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/exporter-prometheus@npm:^0.33.0":
+  version: 0.33.0
+  resolution: "@opentelemetry/exporter-prometheus@npm:0.33.0"
+  dependencies:
+    "@opentelemetry/api-metrics": 0.33.0
+    "@opentelemetry/core": 1.7.0
+    "@opentelemetry/sdk-metrics": 0.33.0
+  peerDependencies:
+    "@opentelemetry/api": ^1.0.0
+  checksum: 6d44a66f42b79ccb772f14ecfc9a720ed7f68475fea2c4241841a2c4b1ed512d0cf1dcd4992b8b550c1a511c067ac2945e7bffb3e41cad9c1d70607a8a0f7ee6
   languageName: node
   linkType: hard
 
@@ -1269,7 +1285,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/sdk-metrics@npm:0.33.0":
+"@opentelemetry/sdk-metrics@npm:0.33.0, @opentelemetry/sdk-metrics@npm:^0.33.0":
   version: 0.33.0
   resolution: "@opentelemetry/sdk-metrics@npm:0.33.0"
   dependencies:
@@ -6444,15 +6460,6 @@ express@next:
   bin:
     resolve: bin/resolve
   checksum: 5656f4d0bedcf8eb52685c1abdf8fbe73a1603bb1160a24d716e27a57f6cecbe2432ff9c89c2bd57542c3a7b9d14b1882b73bfe2e9d7849c9a4c0b8b39f02b8b
-  languageName: node
-  linkType: hard
-
-"rest-api-support@npm:^1.13.3":
-  version: 1.13.3
-  resolution: "rest-api-support@npm:1.13.3"
-  dependencies:
-    query-string: ^6.14.1
-  checksum: fd8589a98f27830994964a840d38b322f757c76191d666342fb8c7576b4c89b91931137373e30729363674af424f96025f7ed096dee107c6592ac752e25c903b
   languageName: node
   linkType: hard
 

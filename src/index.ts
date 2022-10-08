@@ -6,6 +6,7 @@ import {
   ServiceFactory,
   ServiceLocals,
   ServiceStartOptions,
+  shutdownApp,
   startApp,
 } from '@gasbuddy/service';
 
@@ -60,7 +61,7 @@ export async function getReusableApp<
 
 export async function clearReusableApp() {
   if (app) {
-    await app.locals.service?.stop?.();
+    await shutdownApp(app);
   }
   app = undefined;
   appService = undefined;

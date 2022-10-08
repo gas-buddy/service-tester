@@ -1,6 +1,6 @@
 {
   "name": "@gasbuddy/service-tester",
-  "version": "11.2.0",
+  "version": "11.3.0",
   "description": "Testing utilities for @gasbuddy/service",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -34,7 +34,7 @@
     "*.{js,jsx,ts,tsx}": "yarn eslint --cache --fix"
   },
   "devDependencies": {
-    "@gasbuddy/service": "^11.7.0",
+    "@gasbuddy/service": "^11.9.0",
     "@types/lodash": "^4.14.186",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
