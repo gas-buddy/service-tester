@@ -89,25 +89,34 @@ export function mockServiceCall<
   M extends keyof jest.FunctionProperties<Required<Service>>,
 >(service: Service, method: M) {
   const spy = jest.spyOn(service, method);
+  // I feel like Typescript should've been able to figure this out,
+  // but I couldn't get it to and neither could the Interwebs. So a slightly
+  // unsafe cast it is.
+  type ResponseType = Parameters<typeof spy['mockResolvedValue']>[0];
   return {
-    mockResolvedValue: (sim: Parameters<typeof spy['mockResolvedValue']>[0]) => spy.mockResolvedValue({
+    mockResolvedValue: (sim: Partial<ResponseType>) => spy.mockResolvedValue({
+      responseType: 'response',
       status: 200,
-      headers: new Headers(sim.headers || {}),
       ...sim,
-    }),
-    mockResolvedValueOnce: (sim: Parameters<typeof spy['mockResolvedValueOnce']>[0]) => spy.mockResolvedValueOnce({
+      headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    mockResolvedValueOnce: (sim: Partial<ResponseType>) => spy.mockResolvedValueOnce({
+      responseType: 'response',
       status: 200,
-      headers: new Headers(sim.headers || {}),
       ...sim,
-    }),
-    mockRejectedValue: (sim: Parameters<typeof spy['mockRejectedValue']>[0]) => spy.mockResolvedValueOnce({
       headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    mockRejectedValue: (sim: Partial<ResponseType>) => spy.mockResolvedValueOnce({
+      responseType: 'error',
+      status: 500,
       ...sim,
-    }),
-    mockRejectedValueOnce: (sim: Parameters<typeof spy['mockRejectedValueOnce']>[0]) => spy.mockResolvedValueOnce({
       headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    mockRejectedValueOnce: (sim: Partial<ResponseType>) => spy.mockResolvedValueOnce({
+      responseType: 'error',
       ...sim,
-    }),
+      headers: new Headers(sim.headers || {}),
+    } as ResponseType),
     spy,
   };
 }

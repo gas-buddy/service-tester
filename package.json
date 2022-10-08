@@ -1,13 +1,14 @@
 {
   "name": "@gasbuddy/service-tester",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "description": "Testing utilities for @gasbuddy/service",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint src",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "yarn dlx rimraf build",
     "prepare": "husky install"
   },
   "peerDependencies": {
