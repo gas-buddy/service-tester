@@ -95,7 +95,7 @@ export async function getReusableApp<
   };
   let typedApp = app as ServiceExpress<SLocals>;
 
-  const options = await readOptions(cwd || process.cwd(), initialOptions);
+  const options = await readOptions(cwd || process.cwd(), initialOptions).catch(logFn);
   if (!app || appService !== options.service) {
     typedApp = await startApp(options).catch(logFn);
     appService = options.service;
