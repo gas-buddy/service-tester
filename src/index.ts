@@ -3,6 +3,7 @@ import path from 'path';
 import readPackageUp from 'read-pkg-up';
 import { shutdownApp, startApp } from '@gasbuddy/service';
 
+import type { JestConfigWithTsJest } from 'ts-jest';
 import type {
   Service,
   RequestLocals,
@@ -166,3 +167,11 @@ export function mockServiceCall<
     spy,
   };
 }
+
+export const jestConfig: JestConfigWithTsJest = {
+  verbose: true,
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',
+  setupFilesAfterEnv: [path.resolve(__dirname, '../build/afterAll.js')],
+};

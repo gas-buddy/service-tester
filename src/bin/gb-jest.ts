@@ -9,9 +9,15 @@ async function jest() {
     const cwd = path.resolve('.');
     const hasRoots = argv.find((a) => a.split('=')[0] === '--roots');
 
-    let config = await import('find-up').then(({ findUp }) => findUp('jest.config.js'));
+    const config = await import('find-up').then(({ findUp }) => findUp('jest.config.js'));
     if (!config) {
-      config = path.resolve(__dirname, '../../jest.config.js');
+      throw new Error(`Missing jest.config.js. Please add the following to a jest.config.js in the root directory of your project:
+
+module.exports = require('@gasbuddy/service-tester').jestConfig;
+
+If you need custom configuration, just spread that config into an object and
+add your bits (or just build your own config).
+`);
     }
     argv.push(`--config="${config}"`);
     if (!hasRoots) {
