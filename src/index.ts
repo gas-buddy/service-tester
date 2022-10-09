@@ -1,25 +1,90 @@
 import _ from 'lodash';
 import path from 'path';
 import readPackageUp from 'read-pkg-up';
-import {
+import { shutdownApp, startApp } from '@gasbuddy/service';
+
+import type {
+  Service,
   RequestLocals,
   ServiceFactory,
+  ServiceExpress,
   ServiceLocals,
   ServiceStartOptions,
-  shutdownApp,
-  startApp,
 } from '@gasbuddy/service';
 
-import type { ServiceExpress } from '@gasbuddy/service';
-
 let app: ServiceExpress | undefined;
-let appService: ServiceFactory | undefined;
+let appService: ServiceFactory<any, any> | undefined;
+
+async function getRootDirectory(cwd: string, root?: string) {
+  if (root) {
+    return root;
+  }
+  const pkg = await readPackageUp({ cwd });
+  if (!pkg) {
+    throw new Error('Could not locate package directory');
+  }
+  return path.dirname(pkg.path);
+}
+
+async function readOptions<
+  SLocals extends ServiceLocals = ServiceLocals,
+  RLocals extends RequestLocals = RequestLocals,
+>(
+  cwd: string,
+  options: Partial<ServiceStartOptions<SLocals, RLocals>> | ServiceFactory<SLocals, RLocals> = {},
+): Promise<ServiceStartOptions<SLocals, RLocals>> {
+  const isServiceFn = typeof options === 'function';
+  let factory = isServiceFn ? options : options.service;
+  const rootDirectory = await getRootDirectory(
+    cwd,
+    isServiceFn ? undefined : options?.rootDirectory,
+  );
+  let name = isServiceFn ? undefined : options?.name;
+  const finalOptions = {
+    codepath: 'src',
+    rootDirectory,
+    ...(isServiceFn ? {} : options),
+  } as const;
+  if (!factory || !name) {
+    const pkg = await readPackageUp({ cwd: finalOptions.rootDirectory });
+    let main: string = pkg!.packageJson.main || 'src/index.ts';
+    if (finalOptions.codepath === 'src') {
+      main = main.replace(/^(\.?\/?)build\//, '$1src/').replace(/\.js$/, '.ts');
+    }
+    if (!factory) {
+      const finalPath = path.resolve(rootDirectory, main);
+      // eslint-disable-next-line import/no-dynamic-require, global-require
+      factory = require(finalPath).default as () => Service<SLocals, RLocals>;
+      if (!factory) {
+        throw new Error(`Could not find the service method in ${finalPath}`);
+      }
+    }
+    if (!name) {
+      [, name] = pkg!.packageJson.name.split('/');
+    }
+  }
+  return {
+    name,
+    ...finalOptions,
+    service: factory,
+  };
+}
+
+export function getExistingApp<
+  SLocals extends ServiceLocals = ServiceLocals,
+>() {
+  if (!app) {
+    throw new Error('getExistingApp requires a running app, and there is not one available.');
+  }
+  return app as ServiceExpress<SLocals>;
+}
 
 export async function getReusableApp<
   SLocals extends ServiceLocals = ServiceLocals,
   RLocals extends RequestLocals = RequestLocals,
+  SOpts = ServiceStartOptions<SLocals, RLocals>,
 >(
-  options?: ServiceStartOptions<SLocals, RLocals> | ServiceFactory<SLocals, RLocals>,
+  initialOptions?: Partial<SOpts> | ServiceFactory<SLocals, RLocals>,
   cwd?: string,
 ): Promise<ServiceExpress<SLocals>> {
   const logFn = (error: Error) => {
@@ -28,31 +93,11 @@ export async function getReusableApp<
     throw error;
   };
   let typedApp = app as ServiceExpress<SLocals>;
-  if (!options) {
-    if (!app) {
-      throw new Error('getReusableApp() called with no options, requires existing app');
-    }
-    return typedApp;
-  }
-  const factory = typeof options === 'function' ? options : options.service;
-  if (!app || appService !== factory) {
-    // If they don't pass service name and root directory, try and figure it out
-    if (typeof options === 'function') {
-      const pkg = await readPackageUp({ cwd: cwd || process.cwd() });
-      if (!pkg) {
-        throw new Error('Could not find relevant package.json for the service');
-      }
-      typedApp = await startApp({
-        service: options,
-        name: pkg.packageJson.name.split('/')[1],
-        rootDirectory: path.dirname(pkg.path),
-        codepath: 'src',
-      }).catch(logFn);
-      appService = options;
-    } else {
-      typedApp = await startApp({ codepath: 'src', ...options }).catch(logFn);
-      appService = options.service;
-    }
+
+  const options = await readOptions(cwd || process.cwd(), initialOptions);
+  if (!app || appService !== options.service) {
+    typedApp = await startApp(options).catch(logFn);
+    appService = options.service;
     app = typedApp;
     return typedApp;
   }
@@ -86,9 +131,9 @@ export async function getSimulatedContext(config?: Record<string, any>) {
 }
 
 export function mockServiceCall<
-  Service extends {},
-  M extends keyof jest.FunctionProperties<Required<Service>>,
->(service: Service, method: M) {
+  TargetService extends {},
+  M extends keyof jest.FunctionProperties<Required<TargetService>>,
+>(service: TargetService, method: M) {
   const spy = jest.spyOn(service, method);
   // I feel like Typescript should've been able to figure this out,
   // but I couldn't get it to and neither could the Interwebs. So a slightly

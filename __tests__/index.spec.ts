@@ -1,6 +1,8 @@
 import request from 'supertest';
 import type { Service, ServiceStartOptions } from '@gasbuddy/service';
-import { getReusableApp, clearReusableApp, mockServiceCall } from '../src';
+import {
+  getReusableApp, clearReusableApp, mockServiceCall, getExistingApp,
+} from '../src';
 
 import { FakeServLocals } from './src/types';
 
@@ -27,7 +29,7 @@ function getFakeServiceFn(flags: {
 
 describe('Start and stop shared app', () => {
   const flags = { started: 0, stopped: 0 };
-  const options: ServiceStartOptions = {
+  const options: ServiceStartOptions<FakeServLocals> = {
     service: getFakeServiceFn(flags),
     rootDirectory: __dirname,
     codepath: 'src',
@@ -44,14 +46,14 @@ describe('Start and stop shared app', () => {
   });
 
   test('Should reuse app', async () => {
-    const app = await getReusableApp();
+    const app = await getExistingApp();
     expect(app).toBeTruthy();
     expect(flags.started).toEqual(1);
     expect(flags.stopped).toEqual(0);
   });
 
   test('Should make requests', async () => {
-    const app = await getReusableApp<FakeServLocals>();
+    const app = await getExistingApp<FakeServLocals>();
     await request(app).get('/').expect(200);
     await request(app).get('/foobar').expect(404);
     await request(app).post('/').expect(500);
@@ -64,11 +66,11 @@ describe('Start and stop shared app', () => {
   });
 
   test('Should shut down app', async () => {
-    const exapp = await getReusableApp();
+    const exapp = await getExistingApp();
     await clearReusableApp();
     expect(flags.started).toEqual(1);
     expect(flags.stopped).toEqual(1);
-    expect(() => getReusableApp()).rejects.toThrow('no options');
+    expect(Promise.resolve().then(getExistingApp)).rejects.toThrow('requires a running app');
     const app = await getReusableApp(options);
     expect(flags.started).toEqual(2);
     expect(flags.stopped).toEqual(1);
@@ -76,5 +78,11 @@ describe('Start and stop shared app', () => {
     await clearReusableApp();
     expect(flags.started).toEqual(2);
     expect(flags.stopped).toEqual(2);
+  });
+
+  test('Should load app with defaults', async () => {
+    await getReusableApp({
+      rootDirectory: __dirname,
+    });
   });
 });

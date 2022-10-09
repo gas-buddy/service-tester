@@ -448,7 +448,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gasbuddy/service-tester@workspace:."
   dependencies:
-    "@gasbuddy/service": ^11.9.0
+    "@gasbuddy/service": ^11.10.2
     "@types/jest": ^29.1.2
     "@types/lodash": ^4.14.186
     "@types/supertest": ^2.0.12
@@ -473,9 +473,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gasbuddy/service@npm:^11.9.0":
-  version: 11.9.0
-  resolution: "@gasbuddy/service@npm:11.9.0"
+"@gasbuddy/service@npm:^11.10.2":
+  version: 11.10.2
+  resolution: "@gasbuddy/service@npm:11.10.2"
   dependencies:
     "@godaddy/terminus": ^4.11.2
     "@opentelemetry/api": ^1.2.0
@@ -514,7 +514,7 @@ __metadata:
     shortstop-yaml: ^1.0.0
   bin:
     start-service: build/bin/start-service.js
-  checksum: 2715af76e40132c0213ff52e2a75d4b12e5b02fd1d4024a9f70b744036c4132dc875d855394961b4103d22ea4364752fee675e0551e1210c22665c7f1c6fe658
+  checksum: e65461d9a1e67b2f79a0ab5ed762bbff536f4b77f385c588f96395bf321e315d382c1c037eb25703ad2b9ede7054e6116a224ea1dbfab9cd3b66c9a5e6700faa
   languageName: node
   linkType: hard
 
