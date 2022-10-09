@@ -4,4 +4,5 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',
+  setupFilesAfterEnv: ['./src/afterAll.ts'],
 };
