@@ -71,9 +71,7 @@ async function readOptions<
   };
 }
 
-export function getExistingApp<
-  SLocals extends ServiceLocals = ServiceLocals,
->() {
+export function getExistingApp<SLocals extends ServiceLocals = ServiceLocals>() {
   if (!app) {
     throw new Error('getExistingApp requires a running app, and there is not one available.');
   }
@@ -83,9 +81,10 @@ export function getExistingApp<
 export async function getReusableApp<
   SLocals extends ServiceLocals = ServiceLocals,
   RLocals extends RequestLocals = RequestLocals,
-  SOpts = ServiceStartOptions<SLocals, RLocals>,
 >(
-  initialOptions?: Partial<SOpts> | ServiceFactory<SLocals, RLocals>,
+  initialOptions?:
+  | Partial<ServiceStartOptions<SLocals, RLocals>>
+  | ServiceFactory<SLocals, RLocals>,
   cwd?: string,
 ): Promise<ServiceExpress<SLocals>> {
   const logFn = (error: Error) => {
