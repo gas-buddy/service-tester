@@ -1,6 +1,6 @@
 {
   "name": "@gasbuddy/service-tester",
-  "version": "11.6.1",
+  "version": "12.0.0",
   "description": "Testing utilities for @gasbuddy/service",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -12,7 +12,7 @@
     "prepare": "husky install"
   },
   "peerDependencies": {
-    "@gasbuddy/service": "^11.0.0"
+    "@gasbuddy/service": "^12.0.0"
   },
   "bin": {
     "gb-jest": "./build/bin/gb-jest.js"
@@ -34,7 +34,7 @@
     "*.{js,jsx,ts,tsx}": "yarn eslint --cache --fix"
   },
   "devDependencies": {
-    "@gasbuddy/service": "^11.14.2",
+    "@gasbuddy/service": "^12.0.0",
     "@types/lodash": "^4.14.186",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"

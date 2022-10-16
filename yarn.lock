@@ -1220,7 +1220,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gasbuddy/service-tester@workspace:."
   dependencies:
-    "@gasbuddy/service": ^11.14.2
+    "@gasbuddy/service": ^12.0.0
     "@types/jest": ^29.1.2
     "@types/lodash": ^4.14.186
     "@types/supertest": ^2.0.12
@@ -1239,15 +1239,15 @@ __metadata:
     ts-jest: ^29.0.3
     typescript: ^4.8.4
   peerDependencies:
-    "@gasbuddy/service": ^11.0.0
+    "@gasbuddy/service": ^12.0.0
   bin:
     gb-jest: ./build/bin/gb-jest.js
   languageName: unknown
   linkType: soft
 
-"@gasbuddy/service@npm:^11.14.2":
-  version: 11.14.2
-  resolution: "@gasbuddy/service@npm:11.14.2"
+"@gasbuddy/service@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "@gasbuddy/service@npm:12.0.0"
   dependencies:
     "@gasbuddy/kms-crypto": ^5.1.1
     "@godaddy/terminus": ^4.11.2
@@ -1283,7 +1283,7 @@ __metadata:
     shortstop-yaml: ^1.0.0
   bin:
     start-service: build/bin/start-service.js
-  checksum: 05773740b6d3033aee7ddcd3cd2d2de54514cc04b3237749907806533ade4a6fb7342645fb79d8550ed221fb46778d284aa7ba8e9d88630cd720dbbd3e8a53c9
+  checksum: 51c75dc96869d55a84dee8cd6793119962a8668965bba78e68dafaac0610614944312629e52189d112913d1bc219a8b23b17185eb6f6e7efd9b91f1071b93fd8
   languageName: node
   linkType: hard
 
