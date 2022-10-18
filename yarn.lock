@@ -1201,7 +1201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gasbuddy/kms-crypto@npm:^5.1.1":
+"@gasbuddy/kms-crypto@npm:^5.1.2":
   version: 5.1.2
   resolution: "@gasbuddy/kms-crypto@npm:5.1.2"
   dependencies:
@@ -1220,8 +1220,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gasbuddy/service-tester@workspace:."
   dependencies:
-    "@gasbuddy/service": ^12.0.0
-    "@types/jest": ^29.1.2
+    "@gasbuddy/service": ^12.2.0
+    "@types/jest": ^29.2.0
     "@types/lodash": ^4.14.186
     "@types/supertest": ^2.0.12
     eslint: ^8.25.0
@@ -1234,7 +1234,7 @@ __metadata:
     lodash: ^4.17.21
     pino-pretty: ^9.1.1
     read-pkg-up: ^7.0.1
-    rest-api-support: ^1.14.0
+    rest-api-support: ^1.16.1
     supertest: ^6.3.0
     ts-jest: ^29.0.3
     typescript: ^4.8.4
@@ -1245,11 +1245,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gasbuddy/service@npm:^12.0.0":
-  version: 12.0.0
-  resolution: "@gasbuddy/service@npm:12.0.0"
+"@gasbuddy/service@npm:^12.2.0":
+  version: 12.2.0
+  resolution: "@gasbuddy/service@npm:12.2.0"
   dependencies:
-    "@gasbuddy/kms-crypto": ^5.1.1
+    "@gasbuddy/kms-crypto": ^5.1.2
     "@godaddy/terminus": ^4.11.2
     "@opentelemetry/api": ^1.2.0
     "@opentelemetry/api-metrics": ^0.33.0
@@ -1277,13 +1277,13 @@ __metadata:
     minimist: ^1.2.7
     pino: ^8.6.1
     read-pkg-up: ^7.0.1
-    rest-api-support: ^1.14.0
+    rest-api-support: ^1.16.1
     shortstop-dns: ^1.1.0
     shortstop-handlers: ^1.1.1
     shortstop-yaml: ^1.0.0
   bin:
     start-service: build/bin/start-service.js
-  checksum: 51c75dc96869d55a84dee8cd6793119962a8668965bba78e68dafaac0610614944312629e52189d112913d1bc219a8b23b17185eb6f6e7efd9b91f1071b93fd8
+  checksum: 842c2471fe4f605bab03e3be36de11c3c1065349f988ea0eaf025b78b59ec0eef939a226505da44f87403e92a1cd68e62c0fc893784b54c726b8e62b30617c10
   languageName: node
   linkType: hard
 
@@ -2336,13 +2336,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^29.1.2":
-  version: 29.1.2
-  resolution: "@types/jest@npm:29.1.2"
+"@types/jest@npm:^29.2.0":
+  version: 29.2.0
+  resolution: "@types/jest@npm:29.2.0"
   dependencies:
     expect: ^29.0.0
     pretty-format: ^29.0.0
-  checksum: a6761b5ac132c641740886f9c0714607255ebffb6add5989f51ea9e392fc3c5cd474e7590f12b003d5b67ce177dfbc8d3d60d0baa335c48c50deeee6b755a473
+  checksum: 6779e63d8d7507b116a61b2935a200e48531849fc1ac74090212759fe17716777ca6d2c3a8d927a563e9cfa474ae91d40b1688376ae80e3a08974b3c9e9691e1
   languageName: node
   linkType: hard
 
@@ -7002,15 +7002,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"query-string@npm:^6.14.1":
-  version: 6.14.1
-  resolution: "query-string@npm:6.14.1"
+"query-string@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "query-string@npm:7.1.1"
   dependencies:
     decode-uri-component: ^0.2.0
     filter-obj: ^1.1.0
     split-on-first: ^1.0.0
     strict-uri-encode: ^2.0.0
-  checksum: f2c7347578fa0f3fd4eaace506470cb4e9dc52d409a7ddbd613f614b9a594d750877e193b5d5e843c7477b3b295b857ec328903c943957adc41a3efb6c929449
+  checksum: b227d1f588ae93f9f0ad078c6b811295fa151dc5a160a03bb2bac5fa0e6919cb1daa570aad1d288e77c8e89fde5362ba505b1014e6e793da9b1e885b59a690a6
   languageName: node
   linkType: hard
 
@@ -7214,12 +7214,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rest-api-support@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "rest-api-support@npm:1.14.0"
+"rest-api-support@npm:^1.16.1":
+  version: 1.16.1
+  resolution: "rest-api-support@npm:1.16.1"
   dependencies:
-    query-string: ^6.14.1
-  checksum: 0250b8410bcef434dd4c4d1aac65a7d60ddfe01ca8526e229eee6ec03e0f2bca13be3825c93cca61228c76204008633bee4421524fa901dea43ab6cc4b26050c
+    query-string: ^7.1.1
+  checksum: 1133105a0fc7b47015ffaa33f19335a8e154c840231c78c2cb7a8e11ae6d49dd1dff8a0585e762a220b63836186c440c2b600b9103502b05329a5aad139672bb
   languageName: node
   linkType: hard
 

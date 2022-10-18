@@ -34,13 +34,13 @@
     "*.{js,jsx,ts,tsx}": "yarn eslint --cache --fix"
   },
   "devDependencies": {
-    "@gasbuddy/service": "^12.0.0",
+    "@gasbuddy/service": "^12.2.0",
     "@types/lodash": "^4.14.186",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
   },
   "dependencies": {
-    "@types/jest": "^29.1.2",
+    "@types/jest": "^29.2.0",
     "@types/supertest": "^2.0.12",
     "eslint": "^8.25.0",
     "eslint-config-gasbuddy": "^7.0.3",
@@ -50,7 +50,7 @@
     "lodash": "^4.17.21",
     "pino-pretty": "^9.1.1",
     "read-pkg-up": "^7.0.1",
-    "rest-api-support": "^1.14.0",
+    "rest-api-support": "^1.16.1",
     "supertest": "^6.3.0",
     "ts-jest": "^29.0.3",
     "typescript": "^4.8.4"
