@@ -174,3 +174,5 @@ export const jestConfig: JestConfigWithTsJest = {
   testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',
   setupFilesAfterEnv: [path.resolve(__dirname, '../build/afterAll.js')],
 };
+
+export { default as request } from 'supertest';
