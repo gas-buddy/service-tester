@@ -2,6 +2,10 @@
 import { run } from 'jest-cli';
 import path from 'path';
 
+// Fix for Next.js issues with Jest
+// eslint-disable-next-line no-underscore-dangle
+process.env.__NEXT_TEST_MODE = 'jest';
+
 const argv = [...process.argv.slice(2)];
 
 async function jest() {
