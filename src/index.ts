@@ -94,19 +94,30 @@ export async function getReusableApp<
   };
   let typedApp = app as ServiceExpress<SLocals>;
 
-  const options = await readOptions(cwd || process.cwd(), initialOptions).catch(logFn);
-  if (!app || appService !== options.service) {
-    typedApp = await startApp(options).catch(logFn);
-    appService = options.service;
-    app = typedApp;
+  try {
+    const options = await readOptions(cwd || process.cwd(), initialOptions).catch(logFn);
+    if (!app || appService !== options.service) {
+      typedApp = await startApp(options).catch(logFn);
+      appService = options.service;
+      app = typedApp;
+      return typedApp;
+    }
     return typedApp;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Shared app startup failed', error);
+    throw error;
   }
-  return typedApp;
 }
 
 export async function clearReusableApp() {
-  if (app) {
-    await shutdownApp(app);
+  try {
+    if (app) {
+      await shutdownApp(app);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Shared app shutdown failed', error);
   }
   app = undefined;
   appService = undefined;
