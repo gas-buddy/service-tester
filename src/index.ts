@@ -55,7 +55,8 @@ async function readOptions<
     if (!factory) {
       const finalPath = path.resolve(rootDirectory, main);
       // eslint-disable-next-line import/no-dynamic-require, global-require
-      factory = require(finalPath).default as () => Service<SLocals, RLocals>;
+      const module = require(finalPath);
+      factory = (module.default || module.service) as () => Service<SLocals, RLocals>;
       if (!factory) {
         throw new Error(`Could not find the service method in ${finalPath}`);
       }
