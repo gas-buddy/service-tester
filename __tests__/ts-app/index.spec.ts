@@ -2,7 +2,7 @@ import request from 'supertest';
 import type { Service, ServiceStartOptions } from '@gasbuddy/service';
 import {
   getReusableApp, clearReusableApp, mockServiceCall, getExistingApp,
-} from '../src';
+} from '../../src';
 
 import { FakeServLocals } from './src/types';
 
@@ -27,13 +27,13 @@ function getFakeServiceFn(flags: {
   });
 }
 
-describe('Start and stop shared app', () => {
+describe('Typescript app - Start and stop shared app', () => {
   const flags = { started: 0, stopped: 0 };
   const options: ServiceStartOptions<FakeServLocals> = {
     service: getFakeServiceFn(flags),
     rootDirectory: __dirname,
     codepath: 'src',
-    name: 'fake-serv',
+    name: 'fake-ts-serv',
   };
 
   test('Start reusable app', async () => {
