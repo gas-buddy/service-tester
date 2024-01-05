@@ -1,6 +1,6 @@
 import { Service } from '@gasbuddy/service';
 
-export default function (): Service {
+export default function TypescriptApp(): Service {
   return {
     start() {},
   };

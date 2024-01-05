@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import path from 'path';
+import fs from 'fs';
 import readPackageUp from 'read-pkg-up';
 import { shutdownApp, startApp } from '@gasbuddy/service';
 
@@ -36,6 +37,7 @@ async function readOptions<
 ): Promise<ServiceStartOptions<SLocals, RLocals>> {
   const isServiceFn = typeof options === 'function';
   let factory = isServiceFn ? options : options.service;
+  let useJsEntrypoint = false;
   const rootDirectory = await getRootDirectory(
     cwd,
     isServiceFn ? undefined : options?.rootDirectory,
@@ -52,8 +54,12 @@ async function readOptions<
     if (finalOptions.codepath === 'src') {
       main = main.replace(/^(\.?\/?)build\//, '$1src/').replace(/\.js$/, '.ts');
     }
+    let finalPath = path.resolve(rootDirectory, main);
+    if (!fs.existsSync(finalPath)) {
+      finalPath = finalPath.replace('.ts', '.js');
+      useJsEntrypoint = true;
+    }
     if (!factory) {
-      const finalPath = path.resolve(rootDirectory, main);
       // eslint-disable-next-line import/no-dynamic-require, global-require
       const module = require(finalPath);
       factory = (module.default || module.service) as () => Service<SLocals, RLocals>;
@@ -69,6 +75,7 @@ async function readOptions<
     name,
     ...finalOptions,
     service: factory,
+    useJsEntrypoint,
   };
 }
 
@@ -181,7 +188,7 @@ export function mockServiceCall<
 
 export const jestConfig: JestConfigWithTsJest = {
   verbose: true,
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/js-with-ts-legacy',
   testEnvironment: 'node',
   testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',
   setupFilesAfterEnv: [path.resolve(__dirname, '../build/afterAll.js')],
