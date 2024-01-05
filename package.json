@@ -12,7 +12,7 @@
     "prepare": "husky install"
   },
   "peerDependencies": {
-    "@gasbuddy/service": "^12.0.0"
+    "@gasbuddy/service": "^12.20.1"
   },
   "bin": {
     "gb-jest": "./build/bin/gb-jest.js"
@@ -34,7 +34,7 @@
     "*.{js,jsx,ts,tsx}": "yarn eslint --cache --fix"
   },
   "devDependencies": {
-    "@gasbuddy/service": "^12.18.0",
+    "@gasbuddy/service": "^12.20.1",
     "@types/lodash": "^4.14.194",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2"
