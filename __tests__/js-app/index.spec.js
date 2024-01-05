@@ -51,9 +51,9 @@ describe('Javascript app - Start and stop shared app', () => {
 
   test('Should make requests', async () => {
     const app = await getExistingApp();
-    await request(app).get('/js').expect(200);
+    await request(app).get('/').expect(200);
     await request(app).get('/foobar').expect(404);
-    await request(app).post('/js').expect(500);
+    await request(app).post('/').expect(500);
     mockServiceCall(app.locals.services.fakeServ, 'get_something').mockResolvedValue({
       body: { things: ['a', 'b', 'c'] },
     });
