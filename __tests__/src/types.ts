@@ -1,10 +1,10 @@
-import { ServiceLocals } from '@gasbuddy/service';
+import { ServiceLocals, ServiceExpress } from '@gasbuddy/service';
 import { RestApiErrorResponse, RestApiSuccessResponse } from 'rest-api-support';
 
 export interface FakeServLocals extends ServiceLocals {
   services: {
-    fakeServ: {
-      get_something(): Promise<RestApiSuccessResponse<{ things: string[] }> | RestApiErrorResponse>;
-    }
-  }
+    fakeServ: (app: ServiceExpress) => {
+      getSomething(): Promise<RestApiSuccessResponse<{ things: string[] }> | RestApiErrorResponse>;
+    },
+  },
 }

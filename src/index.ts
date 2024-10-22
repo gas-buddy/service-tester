@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import path from 'path';
+import fs from 'fs';
 import readPackageUp from 'read-pkg-up';
 import { shutdownApp, startApp } from '@gasbuddy/service';
 
@@ -36,6 +37,7 @@ async function readOptions<
 ): Promise<ServiceStartOptions<SLocals, RLocals>> {
   const isServiceFn = typeof options === 'function';
   let factory = isServiceFn ? options : options.service;
+  let useJsEntrypoint = false;
   const rootDirectory = await getRootDirectory(
     cwd,
     isServiceFn ? undefined : options?.rootDirectory,
@@ -52,8 +54,12 @@ async function readOptions<
     if (finalOptions.codepath === 'src') {
       main = main.replace(/^(\.?\/?)build\//, '$1src/').replace(/\.js$/, '.ts');
     }
+    let finalPath = path.resolve(rootDirectory, main);
+    if (!fs.existsSync(finalPath)) {
+      finalPath = finalPath.replace('.ts', '.js');
+      useJsEntrypoint = true;
+    }
     if (!factory) {
-      const finalPath = path.resolve(rootDirectory, main);
       // eslint-disable-next-line import/no-dynamic-require, global-require
       const module = require(finalPath);
       factory = (module.default || module.service) as () => Service<SLocals, RLocals>;
@@ -69,6 +75,7 @@ async function readOptions<
     name,
     ...finalOptions,
     service: factory,
+    useJsEntrypoint,
   };
 }
 
@@ -142,6 +149,12 @@ export async function getSimulatedContext(config?: Record<string, any>) {
   };
 }
 
+/**
+ * @param service The service to mock
+ * @param method The method to mock
+ * @returns mocks for the service method
+ * @deprecated Use mockServiceClientCall instead
+ */
 export function mockServiceCall<
   TargetService extends {},
   M extends keyof jest.FunctionProperties<Required<TargetService>>,
@@ -179,9 +192,47 @@ export function mockServiceCall<
   };
 }
 
+export function mockServiceClientCall<
+  TargetService extends {},
+  M extends keyof jest.FunctionProperties<Required<TargetService>>,
+>(serviceFn: (service: ServiceExpress) => TargetService, method: M) {
+  const client = serviceFn(<ServiceExpress>app);
+  const spy = jest.spyOn(client, method);
+  // I feel like Typescript should've been able to figure this out,
+  // but I couldn't get it to and neither could the Interwebs. So a slightly
+  // unsafe cast it is.
+  type ResponseType = Parameters<typeof spy['mockResolvedValue']>[0];
+  return {
+    mockResolvedValue: (sim: Partial<ResponseType>) => spy.mockResolvedValue({
+      responseType: 'response',
+      status: 200,
+      ...sim,
+      headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    mockResolvedValueOnce: (sim: Partial<ResponseType>) => spy.mockResolvedValueOnce({
+      responseType: 'response',
+      status: 200,
+      ...sim,
+      headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    mockRejectedValue: (sim: Partial<ResponseType>) => spy.mockResolvedValueOnce({
+      responseType: 'error',
+      status: 500,
+      ...sim,
+      headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    mockRejectedValueOnce: (sim: Partial<ResponseType>) => spy.mockResolvedValueOnce({
+      responseType: 'error',
+      ...sim,
+      headers: new Headers(sim.headers || {}),
+    } as ResponseType),
+    spy,
+  };
+}
+
 export const jestConfig: JestConfigWithTsJest = {
   verbose: true,
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/js-with-ts-legacy',
   testEnvironment: 'node',
   testRegex: '(\\.|/)(test|spec)\\.[jt]sx?$',
   setupFilesAfterEnv: [path.resolve(__dirname, '../build/afterAll.js')],

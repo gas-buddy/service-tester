@@ -7,7 +7,8 @@ export default function route(router: ServiceRouter<FakeServLocals>) {
   });
 
   router.post('/', async (req, res) => {
-    const { body } = await req.app.locals.services.fakeServ.get_something();
+    const { fakeServ } = req.app.locals.services;
+    const { body } = await fakeServ(req.app).getSomething();
     res.json(body);
   });
 }
