@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions: {}
 
@@ -13,10 +14,12 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
         with:
-          node-version: 18
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       # @gasbuddy/service (this repo's only @gasbuddy dep, peer+dev) is a public package —
       # `npm view @gasbuddy/service` resolves unauthenticated. No install token needed.
       - name: Install dependencies
@@ -32,10 +35,12 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
         with:
-          node-version: 18
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       # @gasbuddy/service (this repo's only @gasbuddy dep, peer+dev) is a public package —
       # `npm view @gasbuddy/service` resolves unauthenticated. No install token needed.
       - name: Install dependencies

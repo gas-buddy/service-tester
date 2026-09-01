@@ -15,6 +15,7 @@
 *.gz
 *.orig
 *.eslintcache
+.env
 
 work
 /build
