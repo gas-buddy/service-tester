@@ -5,19 +5,26 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: |
-          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+      - name: Install dependencies
+        run: |
+          yarn config set npmScopes.gasbuddy.npmRegistryServer "https://registry.npmjs.org"
+          yarn config set npmScopes.gasbuddy.npmAlwaysAuth true
+          yarn config set npmScopes.gasbuddy.npmAuthToken $NPM_AUTH_TOKEN
           yarn install --immutable
         env:
-          NPM_TOKEN: ${{secrets.npm_token}}
+          NPM_AUTH_TOKEN: ${{secrets.npm_token}}
       - run: yarn lint
       - run: yarn test --coverage
       - run: yarn build
@@ -25,17 +32,32 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          registry-url: https://registry.npmjs.org/
-      - run: yarn install --immutable
+      - name: Install dependencies
+        run: |
+          yarn config set npmScopes.gasbuddy.npmRegistryServer "https://registry.npmjs.org"
+          yarn config set npmScopes.gasbuddy.npmAlwaysAuth true
+          yarn config set npmScopes.gasbuddy.npmAuthToken $NPM_AUTH_TOKEN
+          yarn install --immutable
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_AUTH_TOKEN: ${{secrets.npm_token}}
       - run: yarn build
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      # OIDC trusted publishing requires npm's own engines floor (>=20.17.0 || >=22.9.0);
+      # bumped only this step's Node, not the build job above.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - name: Publish to NPM
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          NPM_TAG=$(node -p "require('./package.json').version.split('-')[1]?.split('.')[0] || 'latest'")
+          echo "Publishing $VERSION with dist-tag: $NPM_TAG"
+          npx -y npm@11.19.0 publish --access public --tag "$NPM_TAG"
 
