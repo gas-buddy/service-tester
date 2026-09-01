@@ -17,14 +17,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      # @gasbuddy/service (this repo's only @gasbuddy dep, peer+dev) is a public package —
+      # `npm view @gasbuddy/service` resolves unauthenticated. No install token needed.
       - name: Install dependencies
-        run: |
-          yarn config set npmScopes.gasbuddy.npmRegistryServer "https://registry.npmjs.org"
-          yarn config set npmScopes.gasbuddy.npmAlwaysAuth true
-          yarn config set npmScopes.gasbuddy.npmAuthToken $NPM_AUTH_TOKEN
-          yarn install --immutable
-        env:
-          NPM_AUTH_TOKEN: ${{secrets.npm_token}}
+        run: yarn install --immutable
       - run: yarn lint
       - run: yarn test --coverage
       - run: yarn build
@@ -40,14 +36,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      # @gasbuddy/service (this repo's only @gasbuddy dep, peer+dev) is a public package —
+      # `npm view @gasbuddy/service` resolves unauthenticated. No install token needed.
       - name: Install dependencies
-        run: |
-          yarn config set npmScopes.gasbuddy.npmRegistryServer "https://registry.npmjs.org"
-          yarn config set npmScopes.gasbuddy.npmAlwaysAuth true
-          yarn config set npmScopes.gasbuddy.npmAuthToken $NPM_AUTH_TOKEN
-          yarn install --immutable
-        env:
-          NPM_AUTH_TOKEN: ${{secrets.npm_token}}
+        run: yarn install --immutable
       - run: yarn build
       # OIDC trusted publishing requires npm's own engines floor (>=20.17.0 || >=22.9.0);
       # Node 22's bundled npm (~10.9.x) is below npm's own OIDC floor (>=11.5.1), so bump
