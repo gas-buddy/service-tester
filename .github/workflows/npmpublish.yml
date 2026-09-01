@@ -50,10 +50,13 @@ jobs:
           NPM_AUTH_TOKEN: ${{secrets.npm_token}}
       - run: yarn build
       # OIDC trusted publishing requires npm's own engines floor (>=20.17.0 || >=22.9.0);
-      # bumped only this step's Node, not the build job above.
+      # Node 22's bundled npm (~10.9.x) is below npm's own OIDC floor (>=11.5.1), so bump
+      # to 24 (bundles npm 11.6+) rather than 22 — safe here since this job runs on
+      # ubuntu-latest (GitHub-hosted), not the self-hosted-k8s pool where 24's
+      # availability isn't confirmed. Bumped only this step's Node, not the build job above.
       - uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 24
       - name: Publish to NPM
         run: |
           VERSION=$(node -p "require('./package.json').version")
