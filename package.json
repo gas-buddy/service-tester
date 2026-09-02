@@ -1,6 +1,9 @@
 {
   "name": "@gasbuddy/service-tester",
-  "version": "12.3.0",
+  "version": "12.4.0",
+  "files": [
+    "build"
+  ],
   "description": "Testing utilities for @gasbuddy/service",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -34,14 +37,16 @@
     "*.{js,jsx,ts,tsx}": "yarn eslint --cache --fix"
   },
   "devDependencies": {
-    "@gasbuddy/service": "^12.18.0",
+    "@gasbuddy/service": "^12.25.0",
     "@types/lodash": "^4.14.194",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2"
   },
   "dependencies": {
+    "@jest/types": "^29.5.0",
     "@types/jest": "^29.5.1",
     "@types/supertest": "^2.0.12",
+    "babel-jest": "^29.5.0",
     "eslint": "^8.41.0",
     "eslint-config-gasbuddy": "^7.2.0",
     "find-up": "^6.3.0",

@@ -4,20 +4,26 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions: {}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
         with:
-          node-version: 18
-      - run: |
-          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          yarn install --immutable
-        env:
-          NPM_TOKEN: ${{secrets.npm_token}}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # @gasbuddy/service (this repo's only @gasbuddy dep, peer+dev) is a public package —
+      # `npm view @gasbuddy/service` resolves unauthenticated. No install token needed.
+      - name: Install dependencies
+        run: yarn install --immutable
       - run: yarn lint
       - run: yarn test --coverage
       - run: yarn build
@@ -25,17 +31,33 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # @gasbuddy/service (this repo's only @gasbuddy dep, peer+dev) is a public package —
+      # `npm view @gasbuddy/service` resolves unauthenticated. No install token needed.
+      - name: Install dependencies
+        run: yarn install --immutable
+      - run: yarn build
+      # OIDC trusted publishing requires npm's own engines floor (>=20.17.0 || >=22.9.0);
+      # Node 22's bundled npm (~10.9.x) is below npm's own OIDC floor (>=11.5.1), so bump
+      # to 24 (bundles npm 11.6+) rather than 22 — safe here since this job runs on
+      # ubuntu-latest (GitHub-hosted), not the self-hosted-k8s pool where 24's
+      # availability isn't confirmed. Bumped only this step's Node, not the build job above.
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-      - run: yarn install --immutable
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: yarn build
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          node-version: 24
+      - name: Publish to NPM
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          NPM_TAG=$(node -p "require('./package.json').version.split('-')[1]?.split('.')[0] || 'latest'")
+          echo "Publishing $VERSION with dist-tag: $NPM_TAG"
+          npx -y npm@11.19.0 publish --access public --tag "$NPM_TAG"
 

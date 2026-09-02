@@ -12,6 +12,7 @@ import type {
   ServiceLocals,
   ServiceStartOptions,
 } from '@gasbuddy/service';
+import { resolveEntrypoint } from './resolveEntrypoint';
 
 let app: ServiceExpress | undefined;
 let appService: ServiceFactory<any, any> | undefined;
@@ -50,7 +51,7 @@ async function readOptions<
     const pkg = await readPackageUp({ cwd: finalOptions.rootDirectory });
     let main: string = pkg!.packageJson.main || 'src/index.ts';
     if (finalOptions.codepath === 'src') {
-      main = main.replace(/^(\.?\/?)build\//, '$1src/').replace(/\.js$/, '.ts');
+      main = resolveEntrypoint(finalOptions.rootDirectory, main);
     }
     if (!factory) {
       const finalPath = path.resolve(rootDirectory, main);
@@ -188,3 +189,8 @@ export const jestConfig: JestConfigWithTsJest = {
 };
 
 export { default as request } from 'supertest';
+export {
+  webJestConfig,
+  webJestUnitProjectConfig,
+  webJestIntegrationProjectConfig,
+} from './webJestConfig';

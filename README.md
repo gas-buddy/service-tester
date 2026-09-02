@@ -45,3 +45,37 @@ tricks with Typescript (well, nutty for me), to enable this kind of syntax:
 
 This will cause calls to `app.locals.services.myCrazyServ.get_some_resource()` to return `{resource: true}`. This is just shorthand
 for `jest.spyOn(service, 'method')` with knowledge of the traditional return type of OpenAPI service calls.
+
+Web apps
+--
+
+The exported `jestConfig` is ts-node-based, which suits API/job services but doesn't fit web apps that run
+through Babel (JSX, CSS modules, `@loadable/component`). For those, use `webJestConfig` instead — it's a
+babel-jest two-project config with a `unit` project (jsdom, for component tests co-located under `src/`)
+and an `integration` project (node, for SSR/service-boot tests under `tests/`), and it maps static asset
+imports (`.svg`/`.png`/`.jpe?g`/`.gif`) to a stub so component tests don't need a real file-loader.
+
+```js
+// jest.config.js
+module.exports = require('@gasbuddy/service-tester').webJestConfig;
+```
+
+Each project is also exported individually (`webJestUnitProjectConfig`, `webJestIntegrationProjectConfig`)
+so an app can override or extend just one of them:
+
+```js
+// jest.config.js
+const {
+  webJestUnitProjectConfig,
+  webJestIntegrationProjectConfig,
+} = require('@gasbuddy/service-tester');
+
+module.exports = {
+  projects: [
+    { ...webJestUnitProjectConfig, setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'] },
+    webJestIntegrationProjectConfig,
+  ],
+};
+```
+
+Run either config through `gb-jest` the same way as the ts-node-based `jestConfig`.
